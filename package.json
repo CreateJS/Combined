@@ -1,12 +1,13 @@
 {
   "name": "CreateJS",
-  "version": "0",
+  "version": "0.6.1",
   "description": "CreateJS",
   "url": "http://www.createjs.com",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-uglify": "~0.2.1",
-	"grunt-hub":"~0.5.0"
+	"grunt-hub":"~0.5.0",
+	"lodash":""
   },
   "engine": "node >= 0.10.2"
 }

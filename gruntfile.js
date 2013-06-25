@@ -1,4 +1,5 @@
 var path = require('path');
+var _ = require('lodash');
 
 module.exports = function (grunt) {
 
@@ -35,6 +36,7 @@ module.exports = function (grunt) {
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('lodash');
 	grunt.loadNpmTasks('grunt-hub');
 
 	grunt.registerTask('build', ['hub:build']);
