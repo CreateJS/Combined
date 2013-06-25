@@ -22,7 +22,17 @@ module.exports = function (grunt) {
 					'createjs-<%= grunt.template.today("yyyy.mm.dd") %>.min.js':getCombinedSource()
 				}
 			}
-		} ,
+		},
+		concat: {
+			options: {
+				separator: ''
+			},
+			build: {
+				files: {
+					'createjs-<%= grunt.template.today("yyyy.mm.dd") %>.combined.js': getCombinedSource()
+				}
+			}
+		},
 		hub: {
 			build: {
 				src: getHubTasks(),
@@ -36,8 +46,8 @@ module.exports = function (grunt) {
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('lodash');
 	grunt.loadNpmTasks('grunt-hub');
+	grunt.loadNpmTasks('grunt-contrib-concat');
 
 	grunt.registerTask('build', ['hub:build']);
 	grunt.registerTask('next', ['hub:next']);
