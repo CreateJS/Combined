@@ -57,7 +57,7 @@ grunt next
 Does the exact same process as above but uses NEXT as the version.
 
 ### Combined build
-You can optionally create the combined and minified file of all the libraries.
+To build everything using the latest version in each libraries package.json file run:
 
    grunt build
 
@@ -65,5 +65,8 @@ Or to build a NEXT version
 
 	grunt next
 
-
-### All commands
+### Main commands
+grunt build - Builds all the projects and creates combined / minified files
+grunt next - Same as build, but uses the NEXT version.
+grunt core - Only run the global tasks (only, concat and minify js files, copy the examples and source to other folders.
+grunt js - Only i and concat javascript.
