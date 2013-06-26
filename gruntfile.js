@@ -19,7 +19,7 @@ module.exports = function (grunt) {
 			},
 			build:  {
 				files: {
-					'createjs-<%= grunt.template.today("yyyy.mm.dd") %>.min.js':getCombinedSource()
+					'builds/createjs-<%= grunt.template.today("yyyy.mm.dd") %>.min.js':getCombinedSource()
 				}
 			}
 		},
@@ -36,7 +36,7 @@ module.exports = function (grunt) {
 			},
 			build: {
 				files: {
-					'createjs-<%= grunt.template.today("yyyy.mm.dd") %>.combined.js': getCombinedSource()
+					'builds/createjs-<%= grunt.template.today("yyyy.mm.dd") %>.combined.js': getCombinedSource()
 				}
 			}
 		},
@@ -114,8 +114,8 @@ module.exports = function (grunt) {
 		grunt.log.ok('Done, build took: ' + (time/1000) + ' seconds.');
 	});
 
-	grunt.registerTask('build', ['start', 'hub:build', 'multicopy', 'copy', 'end']);
-	grunt.registerTask('next', ['start', 'hub:next', 'multicopy', 'copy', 'end']);
+	grunt.registerTask('build', ['start', 'hub:build', 'uglify', 'concat', 'multicopy', 'copy', 'end']);
+	grunt.registerTask('next', ['start', 'hub:next', 'uglify', 'concat', 'multicopy', 'copy', 'end']);
 
 	grunt.registerMultiTask('multicopy', function() {
 		this.data.files.forEach(function(item, index, array) {
