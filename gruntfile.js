@@ -97,25 +97,41 @@ module.exports = function (grunt) {
 					{expand:true, cwd:getConfigValue('tween_path')+'/examples', src:'**', dest:getConfigValue('site_path')+'/Demos/TweenJS'}
 				]
 			}
+		},
+
+		clean: {
+			options: {
+				force: true
+			},
+			examples:[
+				getConfigValue('site_path')+'/Demos/EaselJS',
+				getConfigValue('site_path')+'/Demos/PreloadJS',
+				getConfigValue('site_path')+'/Demos/SoundJS',
+				getConfigValue('site_path')+'/Demos/TweenJS'
+			]
 		}
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-hub');
 
-	grunt.registerTask('start', function() {
+	grunt.registerTask('start', 'Internal task, sets the start time of a build, for metrics.', function() {
 		grunt.config.set('startTime', Date.now());
 	});
 
-	grunt.registerTask('end', function() {
+	grunt.registerTask('end', 'Internal task, traces how long the build took, for metrics.', function() {
 		var time = Date.now()-grunt.config.get('startTime');
 		grunt.log.ok('Done, build took: ' + (time/1000) + ' seconds.');
 	});
 
-	grunt.registerTask('build', ['start', 'hub:build', 'uglify', 'concat', 'multicopy', 'copy', 'end']);
-	grunt.registerTask('next', ['start', 'hub:next', 'uglify', 'concat', 'multicopy', 'copy', 'end']);
+	// Main tasks
+	grunt.registerTask('build', 'Build every project using the latest version in each package.json.', ['start', 'hub:build', 'coreBuild', 'end']);
+	grunt.registerTask('next', 'Build every project using a NEXT version.', ['start', 'hub:next', 'coreBuild', 'end']);
+	grunt.registerTask('core','Main task that only runs global tasks. (The child projects are not built)' ,['js', 'multicopy', 'clean:examples', 'copy']);
+	grunt.registerTask('js', 'Only minifys and combines the javascript files.', ['uglify', 'concat']);
 
 	grunt.registerMultiTask('multicopy', function() {
 		this.data.files.forEach(function(item, index, array) {
