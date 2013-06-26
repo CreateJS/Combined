@@ -23,6 +23,13 @@ module.exports = function (grunt) {
 				}
 			}
 		},
+		copy: {
+			build: {
+				files: [
+					{expand:true, cwd:getConfigValue('easel_path')+'build/output', src:'*.js', dest:getConfigValue('site_path')+'/Demos/!(EaselJS)/assets'},
+				]
+			}
+		},
 		concat: {
 			options: {
 				separator: ''
@@ -43,19 +50,59 @@ module.exports = function (grunt) {
 				tasks: ['next'],
 			},
 		},
+		multicopy: {
+			build: {
+				files: [
+					{cwd:getConfigValue('easel_path')+'build/output', src:'*NEXT.min.js', dest:getConfigValue('site_path')+'/Demos/!(EaselJS)/assets'},
+					{cwd:getConfigValue('preload_path')+'build/output', src:'*NEXT.min.js', dest:getConfigValue('site_path')+'/Demos/!(PreloadJS)/assets'},
+					{cwd:getConfigValue('sound_path')+'build/output', src:'*NEXT.min.js', dest:getConfigValue('site_path')+'/Demos/!(SoundJS)/assets'},
+					{cwd:getConfigValue('tween_path')+'build/output', src:'*NEXT.min.js', dest:getConfigValue('site_path')+'/Demos/!(TweenJS)/assets'},
+				]
+			}
+		},
+		copy: {
+			build: {
+				files: [
+					{expand:true, cwd:getConfigValue('easel_path')+'src/', src:'**/*.js', dest:getConfigValue('site_path')+'/Demos/src'},
+					{expand:true, cwd:getConfigValue('preload_path')+'src/', src:'**/!(easeljs)*.js', dest:getConfigValue('site_path')+'/Demos/src'},
+					{expand:true, cwd:getConfigValue('sound_path')+'src/', src:'**/!(easeljs)*.js', dest:getConfigValue('site_path')+'/Demos/src'},
+					{expand:true, cwd:getConfigValue('tween_path')+'src/', src:'**/!(easeljs)*.js', dest:getConfigValue('site_path')+'/Demos/src'},
+				]
+			}
+		}
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-hub');
 	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks('grunt-hub');
 
-	grunt.registerTask('build', ['hub:build']);
-	grunt.registerTask('next', ['hub:next']);
+	grunt.registerTask('build', ['hub:build', 'multicopy', 'copy']);
+	grunt.registerTask('next', ['hub:next', 'multicopy', 'copy']);
 
-	function getBuildConfig() {
+	grunt.registerMultiTask('multicopy', function() {
+		this.data.files.forEach(function(item, index, array) {
+			var src = item.cwd+'/'+item.src;
+			var sources = grunt.file.expand(src);
+			var destinations = grunt.file.expand(item.dest);
+			var copyCount = 0;
+
+			sources.forEach(function(src) {
+				var name = path.basename(src);
+				destinations.forEach(function(dest) {
+					grunt.file.copy(src, dest+'/'+name);
+					copyCount++;
+				});
+			});
+
+			grunt.log.ok('Copied ' + copyCount + ' files.');
+		});
+	});
+
+	function getConfigValue(name) {
 		var config = grunt.config('config');
 		if (config) {
-			return config;
+			return config[name];
 		}
 
 		// Read the global settings file first.
@@ -68,17 +115,6 @@ module.exports = function (grunt) {
 		}
 
 		grunt.config.set('config', config);
-
-		return config;
-	}
-
-	function getConfigValue(name) {
-		var config = getBuildConfig();
-
-		if (config == null) {
-			config = grunt.file.readJSON('config.local.json');
-			grunt.config.set('config', config);
-		}
 
 		return config[name];
 	}
@@ -94,7 +130,6 @@ module.exports = function (grunt) {
 	}
 
 	function getCombinedSource() {
-		// Pull in all the config files (order matters here!)
 		var configs = [
 			{cwd: getConfigValue('easel_path') + '/build/', config:'config.json', source:'easel_source'},
 			{cwd: getConfigValue('preload_path') + '/build/', config:'config.json', source:'source'},
