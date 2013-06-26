@@ -59,16 +59,11 @@ Does the exact same process as above but uses NEXT as the version.
 ### Combined build
 You can optionally create the combined and minified file of all the libraries.
 
-   grunt all
+   grunt build
 
 Or to build a NEXT version
 
-	grunt all-next
+	grunt next
 
 
 ### All commands
-
-grunt build -  Build everything based on the version in package.json
-grunt next - Build everything using the NEXT version.
-grunt docs - Build only the docs
-grunt uglify - Create the Easel and MovieClip min files. (Will use NEXT as the version)
