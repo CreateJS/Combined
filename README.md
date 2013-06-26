@@ -21,9 +21,8 @@ After node is setup, install the other dependances:
    npm install
 
    #Make sure you have the latest of all the createjs libraries.
-   #Install the dependencies in the build directories, ie EaselJS/build
+   #Install the dependencies in the build directories for each project, ie EaselJS/build
    npm install
-   #after the first install, it is much faster to copy the node_modules folder into each other project
 
 
 ### Setup
