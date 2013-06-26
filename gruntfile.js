@@ -41,6 +41,9 @@ module.exports = function (grunt) {
 			}
 		},
 		hub: {
+			options: {
+				concurrent: 4
+			},
 			build: {
 				src: getHubTasks(),
 				tasks: ['build'],
@@ -53,20 +56,45 @@ module.exports = function (grunt) {
 		multicopy: {
 			build: {
 				files: [
-					{cwd:getConfigValue('easel_path')+'build/output', src:'*NEXT.min.js', dest:getConfigValue('site_path')+'/Demos/!(EaselJS)/assets'},
-					{cwd:getConfigValue('preload_path')+'build/output', src:'*NEXT.min.js', dest:getConfigValue('site_path')+'/Demos/!(PreloadJS)/assets'},
-					{cwd:getConfigValue('sound_path')+'build/output', src:'*NEXT.min.js', dest:getConfigValue('site_path')+'/Demos/!(SoundJS)/assets'},
-					{cwd:getConfigValue('tween_path')+'build/output', src:'*NEXT.min.js', dest:getConfigValue('site_path')+'/Demos/!(TweenJS)/assets'},
+					// Copy JS files into each libaries examples folder.
+					{cwd:getConfigValue('easel_path')+'build/output', src:'*NEXT.min.js', dest:[
+						getConfigValue('preload_path')+'/examples/assets',
+						getConfigValue('sound_path')+'/examples/assets',
+						getConfigValue('tween_path')+'/examples/assets'
+					]},
+					{cwd:getConfigValue('preload_path')+'build/output', src:'*NEXT.min.js', dest:[
+						getConfigValue('easel_path')+'/examples/assets',
+						getConfigValue('sound_path')+'/examples/assets',
+						getConfigValue('tween_path')+'/examples/assets'
+					]},
+					{cwd:getConfigValue('sound_path')+'build/output', src:'*NEXT.min.js', dest:[
+						getConfigValue('easel_path')+'/examples/assets',
+						getConfigValue('preload_path')+'/examples/assets',
+						getConfigValue('tween_path')+'/examples/assets'
+					]},
+					{cwd:getConfigValue('tween_path')+'build/output', src:'*NEXT.min.js', dest:[
+						getConfigValue('easel_path')+'/examples/assets',
+						getConfigValue('preload_path')+'/examples/assets',
+						getConfigValue('sound_path')+'/examples/assets'
+					]},
 				]
 			}
 		},
 		copy: {
 			build: {
 				files: [
+						// Copy over all the latest source into the sites demo/src folder.
+						// This ignores easeljs packages in other libraries.
 					{expand:true, cwd:getConfigValue('easel_path')+'src/', src:'**/*.js', dest:getConfigValue('site_path')+'/Demos/src'},
 					{expand:true, cwd:getConfigValue('preload_path')+'src/', src:'**/!(easeljs)*.js', dest:getConfigValue('site_path')+'/Demos/src'},
 					{expand:true, cwd:getConfigValue('sound_path')+'src/', src:'**/!(easeljs)*.js', dest:getConfigValue('site_path')+'/Demos/src'},
 					{expand:true, cwd:getConfigValue('tween_path')+'src/', src:'**/!(easeljs)*.js', dest:getConfigValue('site_path')+'/Demos/src'},
+
+					// Copy examples over to the site.
+					{expand:true, cwd:getConfigValue('easel_path')+'/examples', src:'**', dest:getConfigValue('site_path')+'/Demos/EaselJS'},
+					{expand:true, cwd:getConfigValue('preload_path')+'/examples', src:'**', dest:getConfigValue('site_path')+'/Demos/PreloadJS'},
+					{expand:true, cwd:getConfigValue('sound_path')+'/examples', src:'**', dest:getConfigValue('site_path')+'/Demos/SoundJS'},
+					{expand:true, cwd:getConfigValue('tween_path')+'/examples', src:'**', dest:getConfigValue('site_path')+'/Demos/TweenJS'}
 				]
 			}
 		}
@@ -77,24 +105,35 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-hub');
 
-	grunt.registerTask('build', ['hub:build', 'multicopy', 'copy']);
-	grunt.registerTask('next', ['hub:next', 'multicopy', 'copy']);
+	grunt.registerTask('start', function() {
+		grunt.config.set('startTime', Date.now());
+	});
+
+	grunt.registerTask('end', function() {
+		var time = Date.now()-grunt.config.get('startTime');
+		grunt.log.ok('Done, build took: ' + (time/1000) + ' seconds.');
+	});
+
+	grunt.registerTask('build', ['start', 'hub:build', 'multicopy', 'copy', 'end']);
+	grunt.registerTask('next', ['start', 'hub:next', 'multicopy', 'copy', 'end']);
 
 	grunt.registerMultiTask('multicopy', function() {
 		this.data.files.forEach(function(item, index, array) {
 			var src = item.cwd+'/'+item.src;
 			var sources = grunt.file.expand(src);
-			var destinations = grunt.file.expand(item.dest);
+			var dests = item.dest instanceof Array?item.dest:[item.dest];
 			var copyCount = 0;
+			dests.forEach(function(destPath, index, array) {
+				var destinations = grunt.file.expand(destPath);
 
-			sources.forEach(function(src) {
-				var name = path.basename(src);
-				destinations.forEach(function(dest) {
-					grunt.file.copy(src, dest+'/'+name);
-					copyCount++;
+				sources.forEach(function(src) {
+					var name = path.basename(src);
+					destinations.forEach(function(dest) {
+						grunt.file.copy(src, dest+'/'+name);
+						copyCount++;
+					});
 				});
 			});
-
 			grunt.log.ok('Copied ' + copyCount + ' files.');
 		});
 	});
