@@ -15,7 +15,7 @@ module.exports = function (grunt) {
 					global_defs: {
 						"DEBUG": false
 					}
-				},
+				}
 			},
 			build:  {
 				files: {
@@ -26,7 +26,7 @@ module.exports = function (grunt) {
 		copy: {
 			build: {
 				files: [
-					{expand:true, cwd:getConfigValue('easel_path')+'build/output', src:'*.js', dest:getConfigValue('site_path')+'/Demos/!(EaselJS)/assets'},
+					{expand:true, cwd:getConfigValue('easel_path')+'build/output', src:'*.js', dest:getConfigValue('site_path')+'/Demos/!(EaselJS)/assets'}
 				]
 			}
 		},
@@ -46,12 +46,12 @@ module.exports = function (grunt) {
 			},
 			build: {
 				src: getHubTasks(),
-				tasks: ['build'],
+				tasks: ['build']
 			},
 			next: {
 				src: getHubTasks(),
-				tasks: ['next'],
-			},
+				tasks: ['next']
+			}
 		},
 		multicopy: {
 			build: {
@@ -76,7 +76,7 @@ module.exports = function (grunt) {
 						getConfigValue('easel_path')+'/examples/assets',
 						getConfigValue('preload_path')+'/examples/assets',
 						getConfigValue('sound_path')+'/examples/assets'
-					]},
+					]}
 				]
 			}
 		},
@@ -189,9 +189,10 @@ module.exports = function (grunt) {
 			{cwd: getConfigValue('easel_path') + '/build/', config:'config.json', source:'easel_source'},
 			{cwd: getConfigValue('preload_path') + '/build/', config:'config.json', source:'source'},
 			{cwd: getConfigValue('sound_path') + '/build/', config:'config.json', source:'source'},
-			{cwd: getConfigValue('tween_path') + '/build/', config:'config.json', source:'source'},
+			{cwd: getConfigValue('tween_path') + '/build/', config:'config.json', source:'source'}
 		]
 
+		console.log("configs ", configs.length);
 		// Pull out all the source paths.
 		var sourcePaths = [];
 		for (var i=0;i<configs.length;i++) {
@@ -207,15 +208,18 @@ module.exports = function (grunt) {
 		// Remove duplicates (Like EventDispatcher)
 		var dups = {};
 		var clean = [];
+		console.log("sourcePaths ", sourcePaths.length);
 		for (i=0;i<sourcePaths.length;i++) {
 			var src = sourcePaths[i];
-			var cleanSrc = src.substr(src.lastIndexOf('src/'));
+			console.log("src ", src);
+			var cleanSrc = src.substr(src.lastIndexOf('src' + path.sep));
 			if  (dups[cleanSrc] == null) {
 				clean.push(src);
 				dups[cleanSrc] = true;
 			}
 		}
 
+		console.log("clean ", clean);
 		return clean;
 	}
 }
