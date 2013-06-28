@@ -192,7 +192,6 @@ module.exports = function (grunt) {
 			{cwd: getConfigValue('tween_path') + '/build/', config:'config.json', source:'source'}
 		]
 
-		console.log("configs ", configs.length);
 		// Pull out all the source paths.
 		var sourcePaths = [];
 		for (var i=0;i<configs.length;i++) {
@@ -208,10 +207,8 @@ module.exports = function (grunt) {
 		// Remove duplicates (Like EventDispatcher)
 		var dups = {};
 		var clean = [];
-		console.log("sourcePaths ", sourcePaths.length);
 		for (i=0;i<sourcePaths.length;i++) {
 			var src = sourcePaths[i];
-			console.log("src ", src);
 			var cleanSrc = src.substr(src.lastIndexOf('src' + path.sep));
 			if  (dups[cleanSrc] == null) {
 				clean.push(src);
@@ -219,7 +216,6 @@ module.exports = function (grunt) {
 			}
 		}
 
-		console.log("clean ", clean);
 		return clean;
 	}
 }
