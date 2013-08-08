@@ -3,6 +3,7 @@
   "version": "0.6.1",
   "description": "CreateJS",
   "url": "http://www.createjs.com",
+  "repository":"git@git.gskinner.com:createjs_buildall.git",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-uglify": "~0.2.1",
