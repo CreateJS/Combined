@@ -131,7 +131,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('build', 'Build every project using the latest version in each package.json.', ['start', 'hub:build', 'core', 'end']);
 	grunt.registerTask('next', 'Build every project using a NEXT version.', ['start', 'hub:next', 'core', 'end']);
 	grunt.registerTask('core','Main task that only runs global tasks. (The child projects are not built)' ,['js', 'multicopy', 'clean:examples', 'copy']);
-	grunt.registerTask('js', 'Only minifys and combines the javascript files.', ['uglify', 'concat']);
+	grunt.registerTask('js', 'Only minifies and combines the JavaScript files.', ['uglify', 'concat']);
 
 	grunt.registerMultiTask('multicopy', function() {
 		this.data.files.forEach(function(item, index, array) {
