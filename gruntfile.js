@@ -54,7 +54,7 @@ module.exports = function (grunt) {
 			}
 		},
 		multicopy: {
-			build: {
+			assets: {
 				files: [
 					// Copy JS files into each libaries examples folder.
 					{cwd:getConfigValue('easel_path')+'build/output', src:'*NEXT.min.js', dest:[
@@ -78,13 +78,30 @@ module.exports = function (grunt) {
 						getConfigValue('sound_path')+'/examples/assets'
 					]}
 				]
+			},
+			common: {
+				files: [
+					// EventDispatcher
+					{cwd:getConfigValue('easel_path')+'src/createjs/events', src:'**/*.js', dest:[
+						getConfigValue('tween_path')+'src/createjs/events',
+						getConfigValue('sound_path')+'src/createjs/events',
+						getConfigValue('preload_path')+'src/createjs/events'
+					]},
+					// Utils
+					{cwd:getConfigValue('sound_path')+'src/createjs/utils', src:'**/*.js', dest:[
+						getConfigValue('easel_path')+'src/createjs/utils',
+						getConfigValue('tween_path')+'src/createjs/utils',
+						getConfigValue('preload_path')+'src/createjs/utils'
+
+					]}
+				]
 			}
 		},
 		copy: {
 			build: {
 				files: [
-						// Copy over all the latest source into the sites demo/src folder.
-						// This ignores easeljs packages in other libraries.
+					// Copy over all the latest source into the sites demo/src folder.
+					// This ignores easeljs packages in other libraries.
 					{expand:true, cwd:getConfigValue('easel_path')+'src/', src:'**/*.js', dest:getConfigValue('site_path')+'/Demos/src'},
 					{expand:true, cwd:getConfigValue('preload_path')+'src/', src:'**/!(easeljs)*.js', dest:getConfigValue('site_path')+'/Demos/src'},
 					{expand:true, cwd:getConfigValue('sound_path')+'src/', src:'**/!(easeljs)*.js', dest:getConfigValue('site_path')+'/Demos/src'},
@@ -98,7 +115,6 @@ module.exports = function (grunt) {
 				]
 			}
 		},
-
 		clean: {
 			options: {
 				force: true
@@ -130,8 +146,9 @@ module.exports = function (grunt) {
 	// Main tasks
 	grunt.registerTask('build', 'Build every project using the latest version in each package.json.', ['start', 'hub:build', 'core', 'end']);
 	grunt.registerTask('next', 'Build every project using a NEXT version.', ['start', 'hub:next', 'core', 'end']);
-	grunt.registerTask('core','Main task that only runs global tasks. (The child projects are not built)' ,['js', 'multicopy', 'clean:examples', 'copy']);
+	grunt.registerTask('core','Main task that only runs global tasks. (The child projects are not built)' ,['js', 'multicopy:assets', 'clean:examples', 'copy']);
 	grunt.registerTask('js', 'Only minifies and combines the JavaScript files.', ['uglify', 'concat']);
+	grunt.registerTask('common', 'Copies the common files to all the repositories.', ['multicopy:common']);
 
 	grunt.registerMultiTask('multicopy', function() {
 		this.data.files.forEach(function(item, index, array) {
