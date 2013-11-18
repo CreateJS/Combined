@@ -90,9 +90,8 @@ module.exports = function (grunt) {
 					// Utils
 					{cwd:getConfigValue('sound_path')+'src/createjs/utils', src:'**/*.js', dest:[
 						getConfigValue('easel_path')+'src/createjs/utils',
-						getConfigValue('tween_path')+'src/createjs/utils',
+						//getConfigValue('tween_path')+'src/createjs/utils', // TweenJS doesn't have any libs
 						getConfigValue('preload_path')+'src/createjs/utils'
-
 					]}
 				]
 			}
