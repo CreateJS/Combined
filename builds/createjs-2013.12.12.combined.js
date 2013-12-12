@@ -364,6 +364,7 @@ var p = EventDispatcher.prototype;
 		target.hasEventListener = p.hasEventListener;
 		target.dispatchEvent = p.dispatchEvent;
 		target._dispatchEvent = p._dispatchEvent;
+		target.willTrigger = p.willTrigger;
 	};
 	
 // constructor:
@@ -580,7 +581,7 @@ var p = EventDispatcher.prototype;
 	};
 
 	/**
-	 * Indicates whether there is at least one listener for the specified event type and `useCapture` value.
+	 * Indicates whether there is at least one listener for the specified event type.
 	 * @method hasEventListener
 	 * @param {String} type The string type of the event.
 	 * @return {Boolean} Returns true if there is at least one listener for the specified event.
@@ -588,6 +589,26 @@ var p = EventDispatcher.prototype;
 	p.hasEventListener = function(type) {
 		var listeners = this._listeners, captureListeners = this._captureListeners;
 		return !!((listeners && listeners[type]) || (captureListeners && captureListeners[type]));
+	};
+	
+	/**
+	 * Indicates whether there is at least one listener for the specified event type on this object or any of its
+	 * ancestors (parent, parent's parent, etc). A return value of true indicates that if a bubbling event of the
+	 * specified type is dispatched from this object, it will trigger at least one listener.
+	 * 
+	 * This is similar to {{#crossLink "EventDispatcher/hasEventListener"}}{{/crossLink}}, but it searches the entire
+	 * event flow for a listener, not just this object.
+	 * @method willTrigger
+	 * @param {String} type The string type of the event.
+	 * @return {Boolean} Returns `true` if there is at least one listener for the specified event.
+	 **/
+	p.willTrigger = function(type) {
+		var o = this;
+		while (o) {
+			if (o.hasEventListener(type)) { return true; }
+			o = o.parent;
+		}
+		return false;
 	};
 
 	/**
@@ -4849,6 +4870,15 @@ var DisplayObject = function() {
   this.initialize();
 };
 var p = DisplayObject.prototype = new createjs.EventDispatcher();
+	
+	/**
+	 * Listing of mouse event names. Used in _hasMouseEventListener.
+	 * @property _MOUSE_EVENTS
+	 * @protected
+	 * @static
+	 * @type {Array}
+	 **/
+	DisplayObject._MOUSE_EVENTS = ["click","dblclick","mousedown","mouseout","mouseover","pressmove","pressup","rollout","rollover"];
 
 	/**
 	 * Suppresses errors generated when using features like hitTest, mouse events, and {{#crossLink "getObjectsUnderPoint"}}{{/crossLink}}
@@ -6047,6 +6077,20 @@ var p = DisplayObject.prototype = new createjs.EventDispatcher();
 		
 		return bounds.initialize(minX, minY, maxX-minX, maxY-minY);
 	};
+	
+	/**
+	 * Indicates whether the display object has any mouse event listeners or a cursor.
+	 * @method _isMouseOpaque
+	 * @return {Boolean}
+	 * @protected
+	 **/
+	p._hasMouseEventListener = function() {
+		var evts = DisplayObject._MOUSE_EVENTS;
+		for (var i= 0, l=evts.length; i<l; i++) {
+			if (this.hasEventListener(evts[i])) { return true; }
+		}
+		return !!this.cursor;
+	};
 
 createjs.DisplayObject = DisplayObject;
 }());/*
@@ -6612,25 +6656,30 @@ var p = Container.prototype = new createjs.DisplayObject();
 	 * @param {Number} x
 	 * @param {Number} y
 	 * @param {Array} arr
-	 * @param {Boolean} mouse If true, it will respect mouse interaction properties like mouseEnabled, mouseChildren, and hitArea.
+	 * @param {Boolean} mouse If true, it will respect mouse interaction properties like mouseEnabled, mouseChildren, and active listeners.
+	 * @param {Boolean} activeListener If true, there is an active mouse event listener.
 	 * @return {Array}
 	 * @protected
 	 **/
-	p._getObjectsUnderPoint = function(x, y, arr, mouse) {
+	p._getObjectsUnderPoint = function(x, y, arr, mouse, activeListener) {
 		var ctx = createjs.DisplayObject._hitTestContext;
 		var mtx = this._matrix;
+		activeListener = activeListener || (mouse&&this._hasMouseEventListener());
 
 		// draw children one at a time, and check if we get a hit:
-		var l = this.children.length;
+		var children = this.children;
+		var l = children.length;
 		for (var i=l-1; i>=0; i--) {
-			var child = this.children[i];
-			var hitArea = mouse&&child.hitArea;
+			var child = children[i];
+			var hitArea = child.hitArea;
 			if (!child.visible || (!hitArea && !child.isVisible()) || (mouse && !child.mouseEnabled)) { continue; }
 			// if a child container has a hitArea then we only need to check its hitArea, so we can treat it as a normal DO:
 			if (!hitArea && child instanceof Container) {
-				var result = child._getObjectsUnderPoint(x, y, arr, mouse);
+				var result = child._getObjectsUnderPoint(x, y, arr, mouse, activeListener);
 				if (!arr && result) { return (mouse && !this.mouseChildren) ? this : result; }
 			} else {
+				if (!activeListener && !child._hasMouseEventListener()) { continue; }
+				
 				child.getConcatenatedMatrix(mtx);
 				
 				if (hitArea) {
@@ -12049,7 +12098,7 @@ this.createjs = this.createjs || {};
 	 * @type String
 	 * @static
 	 **/
-	s.buildDate = /*date*/"Wed, 11 Dec 2013 21:04:55 GMT"; // injected by build process
+	s.buildDate = /*date*/"Thu, 12 Dec 2013 22:41:50 GMT"; // injected by build process
 
 })();
 this.createjs = this.createjs||{};
@@ -12081,7 +12130,7 @@ this.createjs = this.createjs||{};
 	 * @type String
 	 * @static
 	 **/
-	s.buildDate = /*date*/"Wed, 11 Dec 2013 21:04:55 GMT"; // injected by build process
+	s.buildDate = /*date*/"Thu, 12 Dec 2013 22:41:50 GMT"; // injected by build process
 
 })();
 /*
@@ -15347,14 +15396,18 @@ this.createjs = this.createjs || {};
 	 */
 	p._parseXML = function (text, type) {
 		var xml = null;
-		if (window.DOMParser) {
-			var parser = new DOMParser();
-			xml = parser.parseFromString(text, type);  // OJR Opera throws DOMException: NOT_SUPPORTED_ERR  // potential solution https://gist.github.com/1129031
-		} else { // IE
-			xml = new ActiveXObject("Microsoft.XMLDOM");
-			xml.async = false;
-			xml.loadXML(text);
-		}
+		try {
+			// CocoonJS does not support XML parsing with either method.
+			// Windows (?) Opera DOMParser throws DOMException: NOT_SUPPORTED_ERR  // potential solution https://gist.github.com/1129031
+			if (window.DOMParser) {
+				var parser = new DOMParser();
+				xml = parser.parseFromString(text, type);
+			} else { // IE
+				xml = new ActiveXObject("Microsoft.XMLDOM");
+				xml.async = false;
+				xml.loadXML(text);
+			}
+		} catch (e) {}
 		return xml;
 	};
 
@@ -15756,7 +15809,7 @@ this.createjs = this.createjs || {};
 	 * @type String
 	 * @static
 	 **/
-	s.buildDate = /*date*/"Wed, 11 Dec 2013 21:04:55 GMT"; // injected by build process
+	s.buildDate = /*date*/"Thu, 12 Dec 2013 22:41:50 GMT"; // injected by build process
 
 })();
 /*
@@ -22236,6 +22289,6 @@ this.createjs = this.createjs || {};
 	 * @type String
 	 * @static
 	 **/
-	s.buildDate = /*date*/"Wed, 11 Dec 2013 21:04:55 GMT"; // injected by build process
+	s.buildDate = /*date*/"Thu, 12 Dec 2013 22:41:50 GMT"; // injected by build process
 
 })();
