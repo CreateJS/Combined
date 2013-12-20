@@ -74,4 +74,4 @@ Or to build a NEXT version
 grunt build - Builds all the projects and creates combined / minified files
 grunt next - Same as build, but uses the NEXT version.
 grunt core - Only run the global tasks (only, concat and minify js files, copy the examples and source to other folders.
-grunt js - Only i and concat javascript.
+grunt js - Only uglify and concat the javascript.
