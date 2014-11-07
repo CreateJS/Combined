@@ -32,7 +32,36 @@ module.exports = function (grunt) {
 		},
 		concat: {
 			options: {
-				separator: ''
+				separator: '',
+				banner:grunt.file.read("BANNER"),
+				process: function(src, filepath) {
+					// Remove a few things from each file, they will be added back at the end.
+
+					// Strip the license header.
+					var file = src.replace(/^(\/\*\s)[\s\S]+?\*\//, "")
+
+					// Strip namespace
+					file = file.replace(/(this.createjs)\s=\s\1.*/, "");
+
+					// Strip namespace label
+					file = file.replace(/\/\/\s*namespace:/, "");
+
+					// Strip @module
+					file = file.replace(/\/\*\*[\s\S]+?@module[\s\S]+?\*\//, "");
+
+					// Clean up white space
+					file = file.replace(/^\s*/, "");
+					file = file.replace(/\s*$/, "");
+
+					// Append on the class name
+					file =
+						"\n\n//##############################################################################\n"+
+						"// " + path.basename(filepath) + "\n" +
+						"//##############################################################################\n\n"+
+						file;
+
+					return file;
+				}
 			},
 			build: {
 				files: {
@@ -46,11 +75,15 @@ module.exports = function (grunt) {
 			},
 			build: {
 				src: getHubTasks(),
-				tasks: ['build']
+				tasks: 'build:all'
 			},
 			next: {
 				src: getHubTasks(),
-				tasks: ['next']
+				tasks:'next:all',
+			},
+			reset: {
+				src: getHubTasks(),
+				tasks: 'clearversion'
 			}
 		},
 		multicopy: {
@@ -143,8 +176,8 @@ module.exports = function (grunt) {
 	});
 
 	// Main tasks
-	grunt.registerTask('build', 'Build every project using the latest version in each package.json.', ['start', 'hub:build', 'core', 'end']);
-	grunt.registerTask('next', 'Build every project using a NEXT version.', ['start', 'hub:next', 'core', 'end']);
+	grunt.registerTask('build', 'Build every project using the latest version in each package.json.', ['start', 'hub:build', 'core', 'hub:reset', 'end']);
+	grunt.registerTask('next', 'Build every project using a NEXT version.', ['start', 'hub:next', 'core', 'hub:reset', 'end']);
 	grunt.registerTask('core','Main task that only runs global tasks. (The child projects are not built)' ,['js', 'multicopy:assets', 'clean:examples', 'copy']);
 	grunt.registerTask('js', 'Only minifies and combines the JavaScript files.', ['uglify', 'concat']);
 	grunt.registerTask('common', 'Copies the common files to all the repositories.', ['multicopy:common']);
