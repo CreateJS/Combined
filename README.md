@@ -47,28 +47,16 @@ To export a release build for this library run:
 
 This command will:
 
-* Update Easels and MovieClips version files.
-* Create the easeljs-{VERSION}.min.js file
-* Create a easeljs-{VERSION}.combined.js file
-* Compile the docs and create a zip of them
-* Create the movieclip-{VERSION}.min.js
-* Copy the docs zip to ../docs
-* Copy the built js file to ../lib
+* Execute each libraries corresponding build or next tasks.
+* Combine all the CreateJS classes into a single file.
+* Remove any duplicate classes (Things like Event, EventDispatcher)
+* Minify the combined file
 
 To build the NEXT version run:
 
 grunt next
 
 Does the exact same process as above but uses NEXT as the version.
-
-### Combined build
-To build everything using the latest version in each libraries package.json file run:
-
-   grunt build
-
-Or to build a NEXT version
-
-	grunt next
 
 ### Main commands
 grunt build - Builds all the projects and creates combined / minified files
