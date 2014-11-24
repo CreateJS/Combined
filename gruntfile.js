@@ -206,6 +206,7 @@ module.exports = function (grunt) {
 	grunt.registerTask("copyDependencies", function() {
 		var sourcePaths = getCombinedSource(false);
 
+		var copyCount = 0;
 		// Copy shared files (Like EventDispatcher and Event)
 		var dups = {};
 		var clean = [];
@@ -216,9 +217,18 @@ module.exports = function (grunt) {
 				clean.push(src);
 				dups[cleanSrc] = src;
 			} else {
-				grunt.log.ok("Copied: " + cleanSrc, "to", src);
-				grunt.file.copy(dups[cleanSrc], src);
+				if (grunt.file.read(dups[cleanSrc]) != grunt.file.read(src)) {
+					grunt.log.ok("Copied: " + cleanSrc, "to", src);
+					grunt.file.copy(dups[cleanSrc], src);
+					copyCount++;
+				}
 			}
+		}
+
+		if (copyCount > 0) {
+			grunt.log.ok("Copied " + copyCount + " files.");
+		} else {
+			grunt.log.ok("No files were copied.");
 		}
 	});
 
