@@ -111,22 +111,6 @@ module.exports = function (grunt) {
 						getConfigValue('sound_path')+'/examples/assets'
 					]}
 				]
-			},
-			common: {
-				files: [
-					// EventDispatcher
-					{cwd:getConfigValue('easel_path')+'src/createjs/events', src:'**/*.js', dest:[
-						getConfigValue('tween_path')+'src/createjs/events',
-						getConfigValue('sound_path')+'src/createjs/events',
-						getConfigValue('preload_path')+'src/createjs/events'
-					]},
-					// Utils
-					{cwd:getConfigValue('sound_path')+'src/createjs/utils', src:'**/*.js', dest:[
-						getConfigValue('easel_path')+'src/createjs/utils',
-						//getConfigValue('tween_path')+'src/createjs/utils', // TweenJS doesn't have any libs
-						getConfigValue('preload_path')+'src/createjs/utils'
-					]}
-				]
 			}
 		},
 		copy: {
@@ -180,7 +164,6 @@ module.exports = function (grunt) {
 	grunt.registerTask('next', 'Build every project using a NEXT version.', ['start', 'hub:next', 'core', 'hub:reset', 'end']);
 	grunt.registerTask('core','Main task that only runs global tasks. (The child projects are not built)' ,['js', 'multicopy:assets', 'clean:examples', 'copy']);
 	grunt.registerTask('js', 'Only minifies and combines the JavaScript files.', ['uglify', 'concat']);
-	grunt.registerTask('common', 'Copies the common files to all the repositories.', ['multicopy:common']);
 
 	grunt.registerMultiTask('multicopy', function() {
 		this.data.files.forEach(function(item, index, array) {
