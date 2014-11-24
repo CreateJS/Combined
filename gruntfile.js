@@ -19,7 +19,7 @@ module.exports = function (grunt) {
 			},
 			build:  {
 				files: {
-					'builds/createjs-<%= grunt.template.today("yyyy.mm.dd") %>.min.js':getCombinedSource()
+					'builds/createjs-<%= grunt.template.today("yyyy.mm.dd") %>.min.js':getCombinedSource(true)
 				}
 			}
 		},
@@ -65,7 +65,7 @@ module.exports = function (grunt) {
 			},
 			build: {
 				files: {
-					'builds/createjs-<%= grunt.template.today("yyyy.mm.dd") %>.combined.js': getCombinedSource()
+					'builds/createjs-<%= grunt.template.today("yyyy.mm.dd") %>.combined.js': getCombinedSource(true)
 				}
 			}
 		},
@@ -203,6 +203,25 @@ module.exports = function (grunt) {
 		});
 	});
 
+	grunt.registerTask("copyDependencies", function() {
+		var sourcePaths = getCombinedSource(false);
+
+		// Copy shared files (Like EventDispatcher and Event)
+		var dups = {};
+		var clean = [];
+		for (var i = 0; i < sourcePaths.length; i++) {
+			var src = sourcePaths[i];
+			var cleanSrc = src.substr(src.lastIndexOf('src' + path.sep));
+			if (dups[cleanSrc] == null) {
+				clean.push(src);
+				dups[cleanSrc] = src;
+			} else {
+				grunt.log.ok("Copied: " + cleanSrc, "to", src);
+				grunt.file.copy(dups[cleanSrc], src);
+			}
+		}
+	});
+
 	function getConfigValue(name) {
 		var config = grunt.config('config');
 		if (config) {
@@ -233,7 +252,7 @@ module.exports = function (grunt) {
 		return files;
 	}
 
-	function getCombinedSource() {
+	function getCombinedSource(clean) {
 		var configs = [
 			{cwd: getConfigValue('easel_path') + '/build/', config:'config.json', source:'easel_source'},
 			{cwd: getConfigValue('preload_path') + '/build/', config:'config.json', source:'source'},
@@ -253,18 +272,21 @@ module.exports = function (grunt) {
 			sourcePaths = sourcePaths.concat(sources);
 		}
 
-		// Remove duplicates (Like EventDispatcher)
-		var dups = {};
-		var clean = [];
-		for (i=0;i<sourcePaths.length;i++) {
-			var src = sourcePaths[i];
-			var cleanSrc = src.substr(src.lastIndexOf('src' + path.sep));
-			if  (dups[cleanSrc] == null) {
-				clean.push(src);
-				dups[cleanSrc] = true;
+		if (clean) {
+			// Remove duplicates (Like EventDispatcher)
+			var dups = {};
+			var clean = [];
+			for (i = 0; i < sourcePaths.length; i++) {
+				var src = sourcePaths[i];
+				var cleanSrc = src.substr(src.lastIndexOf('src' + path.sep));
+				if (dups[cleanSrc] == null) {
+					clean.push(src);
+					dups[cleanSrc] = true;
+				}
 			}
+			return clean;
+		} else {
+			return sourcePaths;
 		}
-
-		return clean;
 	}
 }
