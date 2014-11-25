@@ -186,7 +186,7 @@ module.exports = function (grunt) {
 		});
 	});
 
-	grunt.registerTask("copyDependencies", function() {
+	grunt.registerTask("copyCommon", "Copy common files between libraries, copy priority is (Easel -> Prelaod -> Sound -> Tween", function() {
 		var sourcePaths = getCombinedSource(false);
 
 		var copyCount = 0;
