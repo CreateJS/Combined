@@ -91,24 +91,24 @@ module.exports = function (grunt) {
 				files: [
 					// Copy JS files into each libaries examples folder.
 					{cwd:getConfigValue('easel_path')+'build/output', src:'*NEXT.min.js', dest:[
-						getConfigValue('preload_path')+'/examples/assets',
-						getConfigValue('sound_path')+'/examples/assets',
-						getConfigValue('tween_path')+'/examples/assets'
+						getConfigValue('preload_path')+'/_assets/libs',
+						getConfigValue('sound_path')+'/_assets/libs',
+						getConfigValue('tween_path')+'/_assets/libs'
 					]},
 					{cwd:getConfigValue('preload_path')+'build/output', src:'*NEXT.min.js', dest:[
-						getConfigValue('easel_path')+'/examples/assets',
-						getConfigValue('sound_path')+'/examples/assets',
-						getConfigValue('tween_path')+'/examples/assets'
+						getConfigValue('easel_path')+'/_assets/libs',
+						getConfigValue('sound_path')+'/_assets/libs',
+						getConfigValue('tween_path')+'/_assets/libs'
 					]},
 					{cwd:getConfigValue('sound_path')+'build/output', src:'*NEXT.min.js', dest:[
-						getConfigValue('easel_path')+'/examples/assets',
-						getConfigValue('preload_path')+'/examples/assets',
-						getConfigValue('tween_path')+'/examples/assets'
+						getConfigValue('easel_path')+'/_assets/libs',
+						getConfigValue('preload_path')+'/_assets/libs',
+						getConfigValue('tween_path')+'/_assets/libs'
 					]},
 					{cwd:getConfigValue('tween_path')+'build/output', src:'*NEXT.min.js', dest:[
-						getConfigValue('easel_path')+'/examples/assets',
-						getConfigValue('preload_path')+'/examples/assets',
-						getConfigValue('sound_path')+'/examples/assets'
+						getConfigValue('easel_path')+'/_assets/libs',
+						getConfigValue('preload_path')+'/_assets/libs',
+						getConfigValue('sound_path')+'/_assets/libs'
 					]}
 				]
 			}
