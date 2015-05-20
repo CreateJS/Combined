@@ -75,15 +75,15 @@ module.exports = function (grunt) {
 			},
 			build: {
 				src: getHubTasks(),
-				tasks: 'build:all'
+				tasks: ['build:all']
 			},
 			next: {
 				src: getHubTasks(),
-				tasks:'next:all',
+				tasks: ['next:all'],
 			},
 			reset: {
 				src: getHubTasks(),
-				tasks: 'clearversion'
+				tasks: ['clearversion']
 			}
 		},
 		multicopy: {
