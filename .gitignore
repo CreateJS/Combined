@@ -3,3 +3,6 @@ config.local.json
 
 .DS_Store
 .idea
+.sass-cache
+cdn/build
+cdn/styles/styles.css

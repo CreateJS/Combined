@@ -1,5 +1,6 @@
 var path = require('path');
 var _ = require('lodash');
+var fs = require('fs');
 
 module.exports = function (grunt) {
 
@@ -17,24 +18,17 @@ module.exports = function (grunt) {
 					}
 				}
 			},
-			build:  {
-				files: {
-					'builds/createjs-<%= grunt.template.today("yyyy.mm.dd") %>.min.js':getCombinedSource(true)
-				}
-			}
-		},
-		copy: {
 			build: {
-				files: [
-					{expand:true, cwd:getConfigValue('easel_path')+'build/output', src:'*.js', dest:getConfigValue('site_path')+'/Demos/!(EaselJS)/assets'}
-				]
+				files: {
+					'builds/createjs-<%= grunt.template.today("yyyy.mm.dd") %>.min.js': getCombinedSource(true)
+				}
 			}
 		},
 		concat: {
 			options: {
 				separator: '',
-				banner:grunt.file.read("BANNER"),
-				process: function(src, filepath) {
+				banner: grunt.file.read("BANNER"),
+				process: function (src, filepath) {
 					// Remove a few things from each file, they will be added back at the end.
 
 					// Strip the license header.
@@ -55,10 +49,10 @@ module.exports = function (grunt) {
 
 					// Append on the class name
 					file =
-						"\n\n//##############################################################################\n"+
-						"// " + path.basename(filepath) + "\n" +
-						"//##############################################################################\n\n"+
-						file;
+							"\n\n//##############################################################################\n" +
+							"// " + path.basename(filepath) + "\n" +
+							"//##############################################################################\n\n" +
+							file;
 
 					return file;
 				}
@@ -90,26 +84,63 @@ module.exports = function (grunt) {
 			assets: {
 				files: [
 					// Copy JS files into each libaries examples folder.
-					{cwd:getConfigValue('easel_path')+'build/output', src:'*NEXT.min.js', dest:[
-						getConfigValue('preload_path')+'/_assets/libs',
-						getConfigValue('sound_path')+'/_assets/libs',
-						getConfigValue('tween_path')+'/_assets/libs'
-					]},
-					{cwd:getConfigValue('preload_path')+'build/output', src:'*NEXT.min.js', dest:[
-						getConfigValue('easel_path')+'/_assets/libs',
-						getConfigValue('sound_path')+'/_assets/libs',
-						getConfigValue('tween_path')+'/_assets/libs'
-					]},
-					{cwd:getConfigValue('sound_path')+'build/output', src:'*NEXT.min.js', dest:[
-						getConfigValue('easel_path')+'/_assets/libs',
-						getConfigValue('preload_path')+'/_assets/libs',
-						getConfigValue('tween_path')+'/_assets/libs'
-					]},
-					{cwd:getConfigValue('tween_path')+'build/output', src:'*NEXT.min.js', dest:[
-						getConfigValue('easel_path')+'/_assets/libs',
-						getConfigValue('preload_path')+'/_assets/libs',
-						getConfigValue('sound_path')+'/_assets/libs'
-					]}
+					{
+						cwd: getConfigValue('easel_path') + 'build/output',
+						src: '*NEXT.min.js',
+						dest: [
+							getConfigValue('preload_path') + '/_assets/libs',
+							getConfigValue('sound_path') + '/_assets/libs',
+							getConfigValue('tween_path') + '/_assets/libs'
+						]
+					},
+					{
+						cwd: getConfigValue('preload_path') + 'build/output',
+						src: '*NEXT.min.js',
+						dest: [
+							getConfigValue('easel_path') + '/_assets/libs',
+							getConfigValue('sound_path') + '/_assets/libs',
+							getConfigValue('tween_path') + '/_assets/libs'
+						]
+					},
+					{
+						cwd: getConfigValue('sound_path') + 'build/output',
+						src: '*NEXT.min.js',
+						dest: [
+							getConfigValue('easel_path') + '/_assets/libs',
+							getConfigValue('preload_path') + '/_assets/libs',
+							getConfigValue('tween_path') + '/_assets/libs'
+						]
+					},
+					{
+						cwd: getConfigValue('tween_path') + 'build/output',
+						src: '*NEXT.min.js',
+						dest: [
+							getConfigValue('easel_path') + '/_assets/libs',
+							getConfigValue('preload_path') + '/_assets/libs',
+							getConfigValue('sound_path') + '/_assets/libs'
+						]
+					}
+				]
+			}
+		},
+		sass: {
+			options: {
+				sourcemap: 'none'
+			},
+			cdn: {
+				files: {
+					'cdn/styles/styles.css': 'cdn/styles/styles.scss'
+				}
+			}
+		},
+		inline: {
+			cdn: {
+				files: [
+					{
+						cwd: 'cdn/',
+						src: 'index.template.html',
+						dest: 'build/index.html',
+					}
 				]
 			}
 		},
@@ -118,16 +149,70 @@ module.exports = function (grunt) {
 				files: [
 					// Copy over all the latest source into the sites demo/src folder.
 					// This ignores easeljs packages in other libraries.
-					{expand:true, cwd:getConfigValue('easel_path')+'src/', src:'**/*.js', dest:getConfigValue('site_path')+'/Demos/src'},
-					{expand:true, cwd:getConfigValue('preload_path')+'src/', src:'**/!(easeljs)*.js', dest:getConfigValue('site_path')+'/Demos/src'},
-					{expand:true, cwd:getConfigValue('sound_path')+'src/', src:'**/!(easeljs)*.js', dest:getConfigValue('site_path')+'/Demos/src'},
-					{expand:true, cwd:getConfigValue('tween_path')+'src/', src:'**/!(easeljs)*.js', dest:getConfigValue('site_path')+'/Demos/src'},
+					{
+						expand: true,
+						cwd: getConfigValue('easel_path') + 'src/',
+						src: '**/*.js',
+						dest: getConfigValue('site_path') + '/Demos/src'
+					},
+					{
+						expand: true,
+						cwd: getConfigValue('preload_path') + 'src/',
+						src: '**/!(easeljs)*.js',
+						dest: getConfigValue('site_path') + '/Demos/src'
+					},
+					{
+						expand: true,
+						cwd: getConfigValue('sound_path') + 'src/',
+						src: '**/!(easeljs)*.js',
+						dest: getConfigValue('site_path') + '/Demos/src'
+					},
+					{
+						expand: true,
+						cwd: getConfigValue('tween_path') + 'src/',
+						src: '**/!(easeljs)*.js',
+						dest: getConfigValue('site_path') + '/Demos/src'
+					},
 
 					// Copy examples over to the site.
-					{expand:true, cwd:getConfigValue('easel_path')+'/examples', src:'**', dest:getConfigValue('site_path')+'/Demos/EaselJS'},
-					{expand:true, cwd:getConfigValue('preload_path')+'/examples', src:'**', dest:getConfigValue('site_path')+'/Demos/PreloadJS'},
-					{expand:true, cwd:getConfigValue('sound_path')+'/examples', src:'**', dest:getConfigValue('site_path')+'/Demos/SoundJS'},
-					{expand:true, cwd:getConfigValue('tween_path')+'/examples', src:'**', dest:getConfigValue('site_path')+'/Demos/TweenJS'}
+					{
+						expand: true,
+						cwd: getConfigValue('easel_path') + '/examples',
+						src: '**',
+						dest: getConfigValue('site_path') + '/Demos/EaselJS'
+					},
+					{
+						expand: true,
+						cwd: getConfigValue('preload_path') + '/examples',
+						src: '**',
+						dest: getConfigValue('site_path') + '/Demos/PreloadJS'
+					},
+					{
+						expand: true,
+						cwd: getConfigValue('sound_path') + '/examples',
+						src: '**',
+						dest: getConfigValue('site_path') + '/Demos/SoundJS'
+					},
+					{
+						expand: true,
+						cwd: getConfigValue('tween_path') + '/examples',
+						src: '**',
+						dest: getConfigValue('site_path') + '/Demos/TweenJS'
+					}
+				]
+			},
+			cdn: {
+				files: [
+					{
+						expand: true,
+						flatten: true,
+						src: 'cdn/favicons/*',
+						dest: 'cdn/build/favicons'
+					},
+					{
+						src: 'cdn/favicon.ico',
+						dest: 'cdn/build/favicon.ico'
+					}
 				]
 			}
 		},
@@ -135,11 +220,11 @@ module.exports = function (grunt) {
 			options: {
 				force: true
 			},
-			examples:[
-				getConfigValue('site_path')+'/Demos/EaselJS',
-				getConfigValue('site_path')+'/Demos/PreloadJS',
-				getConfigValue('site_path')+'/Demos/SoundJS',
-				getConfigValue('site_path')+'/Demos/TweenJS'
+			examples: [
+				getConfigValue('site_path') + '/Demos/EaselJS',
+				getConfigValue('site_path') + '/Demos/PreloadJS',
+				getConfigValue('site_path') + '/Demos/SoundJS',
+				getConfigValue('site_path') + '/Demos/TweenJS'
 			]
 		}
 	});
@@ -149,35 +234,79 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-hub');
+	grunt.loadNpmTasks('grunt-contrib-sass');
+	grunt.loadTasks('tasks/');
 
-	grunt.registerTask('start', 'Internal task, sets the start time of a build, for metrics.', function() {
+	grunt.registerTask('start', 'Internal task, sets the start time of a build, for metrics.', function () {
 		grunt.config.set('startTime', Date.now());
 	});
 
-	grunt.registerTask('end', 'Internal task, traces how long the build took, for metrics.', function() {
-		var time = Date.now()-grunt.config.get('startTime');
-		grunt.log.ok('Done, build took: ' + (time/1000) + ' seconds.');
+	grunt.registerTask('end', 'Internal task, traces how long the build took, for metrics.', function () {
+		var time = Date.now() - grunt.config.get('startTime');
+		grunt.log.ok('Done, build took: ' + (time / 1000) + ' seconds.');
 	});
 
 	// Main tasks
 	grunt.registerTask('build', 'Build every project using the latest version in each package.json.', ['start', 'hub:build', 'core', 'hub:reset', 'end']);
 	grunt.registerTask('next', 'Build every project using a NEXT version.', ['start', 'hub:next', 'core', 'hub:reset', 'end']);
-	grunt.registerTask('core','Main task that only runs global tasks. (The child projects are not built)' ,['js', 'multicopy:assets', 'clean:examples', 'copy']);
+	grunt.registerTask('core', 'Main task that only runs global tasks. (The child projects are not built)', ['js', 'multicopy:assets', 'clean:examples', 'copy']);
 	grunt.registerTask('js', 'Only minifies and combines the JavaScript files.', ['uglify', 'concat']);
 
-	grunt.registerMultiTask('multicopy', function() {
-		this.data.files.forEach(function(item, index, array) {
-			var src = item.cwd+'/'+item.src;
+	grunt.registerTask('cdn', 'Build a new CDN index page and copy all required files to the cdn/build/ folder.', ['sass:cdn', 'inline:cdn', 'copyCDNSource', 'copy:cdn']);
+	grunt.registerTask('cdn:build', 'Alias for ```grunt build cdn```', ['build', 'cdn']);
+
+	grunt.registerTask('copyCDNSource', 'Copy all the required sources from each library (and combined files) into cdn/build/', function () {
+		var easel = getCDNSource(getConfigValue('easel_path'));
+		var tween = getCDNSource(getConfigValue('tween_path'));
+		var sound = getCDNSource(getConfigValue('sound_path'));
+		var preload = getCDNSource(getConfigValue('preload_path'));
+
+		var lastTime = null;
+		var newestFile = null;
+		grunt.file.expand('builds/createjs-*').forEach(function (file) {
+			var stats = fs.statSync(file);
+			var time = new Date(stats.mtime);
+			if (lastTime == null || time > lastTime) {
+				newestFile = file;
+				lastTime = time;
+			}
+		});
+
+		var newsetTimestamp = newestFile.match(/(?:createjs-)([0-9.]+)/)[1];
+		newsetTimestamp = newsetTimestamp.substr(0, newsetTimestamp.length - 1)
+
+		var grouped = grunt.file.expand('builds/*' + newsetTimestamp + '*');
+
+		var all = easel.concat(tween, sound, preload, grouped);
+		all.forEach(function (src) {
+			var dest = path.basename(src);
+			grunt.file.copy(src, path.join('cdn/build', dest));
+		});
+
+		grunt.log.ok('Done: Copied ' + all.length + ' files.');
+	});
+
+	function getCDNSource (parent) {
+		var json = grunt.file.readJSON(path.join(parent, 'build/package.json'));
+		var version = json.version;
+
+		var src = path.join(parent, 'lib', '*' + '-' + version + '*');
+		return grunt.file.expand(src);
+	}
+
+	grunt.registerMultiTask('multicopy', function () {
+		this.data.files.forEach(function (item, index, array) {
+			var src = item.cwd + '/' + item.src;
 			var sources = grunt.file.expand(src);
-			var dests = item.dest instanceof Array?item.dest:[item.dest];
+			var dests = item.dest instanceof Array ? item.dest : [item.dest];
 			var copyCount = 0;
-			dests.forEach(function(destPath, index, array) {
+			dests.forEach(function (destPath, index, array) {
 				var destinations = grunt.file.expand(destPath);
 
-				sources.forEach(function(src) {
+				sources.forEach(function (src) {
 					var name = path.basename(src);
-					destinations.forEach(function(dest) {
-						grunt.file.copy(src, dest+'/'+name);
+					destinations.forEach(function (dest) {
+						grunt.file.copy(src, dest + '/' + name);
 						copyCount++;
 					});
 				});
@@ -186,7 +315,7 @@ module.exports = function (grunt) {
 		});
 	});
 
-	grunt.registerTask("copyCommon", "Copy common files between libraries, copy priority is (Easel -> Prelaod -> Sound -> Tween", function() {
+	grunt.registerTask("copyCommon", "Copy common files between libraries, copy priority is (Easel -> Prelaod -> Sound -> Tween", function () {
 		var sourcePaths = getCombinedSource(false);
 
 		var copyCount = 0;
@@ -215,7 +344,7 @@ module.exports = function (grunt) {
 		}
 	});
 
-	function getConfigValue(name) {
+	function getConfigValue (name) {
 		var config = grunt.config('config');
 		if (config) {
 			return config[name];
@@ -235,31 +364,47 @@ module.exports = function (grunt) {
 		return config[name];
 	}
 
-	function getHubTasks() {
+	function getHubTasks () {
 		var files = [
-			getConfigValue('easel_path')+'build/Gruntfile.js',
-			getConfigValue('preload_path')+'build/Gruntfile.js',
-			getConfigValue('sound_path')+'build/Gruntfile.js',
-			getConfigValue('tween_path')+'build/Gruntfile.js'
+			getConfigValue('easel_path') + 'build/Gruntfile.js',
+			getConfigValue('preload_path') + 'build/Gruntfile.js',
+			getConfigValue('sound_path') + 'build/Gruntfile.js',
+			getConfigValue('tween_path') + 'build/Gruntfile.js'
 		];
 		return files;
 	}
 
-	function getCombinedSource(clean) {
+	function getCombinedSource (clean) {
 		var configs = [
-			{cwd: getConfigValue('easel_path') + '/build/', config:'config.json', source:'easel_source'},
-			{cwd: getConfigValue('preload_path') + '/build/', config:'config.json', source:'source'},
-			{cwd: getConfigValue('sound_path') + '/build/', config:'config.json', source:'source'},
-			{cwd: getConfigValue('tween_path') + '/build/', config:'config.json', source:'source'}
+			{
+				cwd: getConfigValue('easel_path') + '/build/',
+				config: 'config.json',
+				source: 'easel_source'
+			},
+			{
+				cwd: getConfigValue('preload_path') + '/build/',
+				config: 'config.json',
+				source: 'source'
+			},
+			{
+				cwd: getConfigValue('sound_path') + '/build/',
+				config: 'config.json',
+				source: 'source'
+			},
+			{
+				cwd: getConfigValue('tween_path') + '/build/',
+				config: 'config.json',
+				source: 'source'
+			}
 		]
 
 		// Pull out all the source paths.
 		var sourcePaths = [];
-		for (var i=0;i<configs.length;i++) {
+		for (var i = 0; i < configs.length; i++) {
 			var o = configs[i];
 			var json = grunt.file.readJSON(path.resolve(o.cwd, o.config));
 			var sources = json[o.source];
-			sources.forEach(function(item, index, array) {
+			sources.forEach(function (item, index, array) {
 				array[index] = path.resolve(o.cwd, item);
 			});
 			sourcePaths = sourcePaths.concat(sources);

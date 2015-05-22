@@ -1,0 +1,90 @@
+/*
+* Copyright (c) 2015 gskinner.com, inc.
+*
+* Permission is hereby granted, free of charge, to any person
+* obtaining a copy of this software and associated documentation
+* files (the "Software"), to deal in the Software without
+* restriction, including without limitation the rights to use,
+* copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the
+* Software is furnished to do so, subject to the following
+* conditions:
+*
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+* OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+* HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+* FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+//*******************************************
+//
+//	TRANSITION SETTINGS
+//	Default transition settings.
+//
+//	Contents
+//	1) DURATIONS
+//	2) EASING
+//	3) COMBINATIONS
+//
+//*******************************************
+
+
+
+//*******************************************
+//
+//	DURATIONS
+//
+//*******************************************
+$duration-shortest: 25ms;
+$duration-short: 	80ms;
+$duration-default: 	150ms;
+$duration-long: 	200ms;
+$duration-longer: 	300ms;
+// $duration-longest: 	0.4s;
+
+
+//*******************************************
+//
+//	EASING
+//
+//*******************************************
+$ease-default: 	cubic-bezier(	0.6,	0.18,	0.32,	0.95	);
+$ease-inOut: 	cubic-bezier(	0.55,	0,		0.45,	1		); // good for transforms
+$ease-snap: 	cubic-bezier(	0.3,	0,		0.2,	1		); // good for transforms
+$ease-out: 		cubic-bezier(	0.4,	0.18,	0.32,	1		); // good for color transitions
+$ease-over: 	cubic-bezier(	0.4,	0,		0.32,	1.75	);
+$ease-drift: 	cubic-bezier(	0.35,	0.01,	0.63,	1		);
+
+
+
+//*******************************************
+//
+//	COMBINATIONS
+//
+//*******************************************
+$transition-shortest-default: 	$duration-shortest 	$ease-default;
+$transition-shortest-out: 		$duration-shortest 	$ease-out;
+$transition-shortest-inOut: 	$duration-shortest 	$ease-inOut;
+
+$transition-short-default: 		$duration-short 	$ease-default;
+$transition-short-out: 			$duration-short 	$ease-out;
+$transition-short-inOut: 		$duration-short 	$ease-inOut;
+
+$transition-default-default: 	$duration-default 	$ease-default;
+$transition-default-inOut: 		$duration-default 	$ease-inOut;
+$transition-default-out: 		$duration-default 	$ease-out;
+
+$transition-long-default: 		$duration-long 		$ease-default;
+$transition-long-inOut: 		$duration-long		$ease-inOut;
+$transition-long-out: 			$duration-long		$ease-out;
+$transition-long-over: 			$duration-long 		$ease-over;
+
+$transition-longer-default:		$duration-longer 	$ease_default;
+$transition-longer-out:			$duration-longer 	$ease_out;
