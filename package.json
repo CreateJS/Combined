@@ -1,22 +1,19 @@
 {
-  "name": "CreateJS",
-  "version": "0.7.0",
-  "description": "CreateJS",
-  "url": "http://www.createjs.com",
-  "repository": "https://github.com/CreateJS/Combined.git",
-  "devDependencies": {
-    "grunt": "~0.4.5",
-    "grunt-contrib-clean": "~0.6.0",
-    "grunt-contrib-compress": "~0.12.0",
-    "grunt-contrib-concat": "~0.5.0",
-    "grunt-contrib-copy": "~0.7.0",
-    "grunt-contrib-sass": "^0.9.2",
-    "grunt-contrib-uglify": "~0.6.0",
-    "grunt-contrib-yuidoc": "~0.5.2",
-    "grunt-hub": "~0.7.0",
-    "html-minifier": "^0.7.2",
-    "inline-source": "^4.0.0",
-    "lodash": "~2.4.1"
-  },
-  "engine": "node >= 0.10.22"
+	"name": "CreateJS",
+	"version": "0.8.1",
+	"description": "CreateJS",
+	"url": "http://www.createjs.com",
+	"repository": "git@git.gskinner.com:createjs_buildall.git",
+	"devDependencies": {
+		"grunt": "~0.4.5",
+		"grunt-contrib-concat": "~0.5.0",
+		"grunt-contrib-uglify": "~0.6.0",
+		"grunt-contrib-yuidoc": "~0.5.2",
+		"grunt-contrib-compress": "~0.12.0",
+		"grunt-contrib-copy": "~0.7.0",
+		"grunt-contrib-clean": "~0.6.0",
+		"lodash": "~2.4.1",
+		"grunt-hub": "~0.7.0"
+	},
+	"engine": "node >= 0.10.22"
 }
