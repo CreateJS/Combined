@@ -22335,6 +22335,7 @@ createjs.indexOf = function (array, searchElement){
 		this.panNode = s.context.createPanner();
 		this.panNode.panningModel = s._panningModel;
 		this.panNode.connect(this.gainNode);
+		this._updatePan();
 
 		/**
 		 * NOTE this is only intended for use by advanced users.
