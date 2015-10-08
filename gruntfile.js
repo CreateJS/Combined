@@ -397,13 +397,20 @@ module.exports = function (grunt) {
 				config: 'config.json',
 				source: 'source'
 			}
-		]
+		];
 
 		// Pull out all the source paths.
 		var sourcePaths = [];
 		for (var i = 0; i < configs.length; i++) {
 			var o = configs[i];
-			var json = grunt.file.readJSON(path.resolve(o.cwd, o.config));
+			var file = path.resolve(o.cwd, o.config);
+
+			// If even one directory is missing, this will fail.
+			if (file == null || !grunt.file.exists(file)) {
+				console.error("Missing source directory: ", o.cwd);
+				return;
+			}
+			var json = grunt.file.readJSON();
 			var sources = json[o.source];
 			sources.forEach(function (item, index, array) {
 				array[index] = path.resolve(o.cwd, item);
