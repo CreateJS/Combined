@@ -253,6 +253,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('js', 'Only minifies and combines the JavaScript files.', ['uglify', 'concat']);
 
 	grunt.registerTask('cdn', 'Build a new CDN index page and copy all required files to the cdn/build/ folder.', ['sass:cdn', 'inline:cdn', 'copyCDNSource', 'copy:cdn']);
+	grunt.registerTask('design', 'Build a new CDN index page.', ['sass:cdn', 'inline:cdn', 'copy:cdn']);
 	grunt.registerTask('cdn:build', 'Alias for ```grunt build cdn```', ['build', 'cdn']);
 
 	grunt.registerTask('copyCDNSource', 'Copy all the required sources from each library (and combined files) into cdn/build/', function () {
