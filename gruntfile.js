@@ -278,8 +278,9 @@ module.exports = function (grunt) {
 
 		var grouped = grunt.file.expand('builds/*' + newsetTimestamp + '*');
 
-		var all = easel.concat(tween, sound, preload, grouped);
+		var all = [].concat(easel,tween, sound, preload, grouped);
 		all.forEach(function (src) {
+			if (src == undefined) { return; }
 			var dest = path.basename(src);
 			grunt.file.copy(src, path.join('cdn/build', dest));
 		});
@@ -288,7 +289,11 @@ module.exports = function (grunt) {
 	});
 
 	function getCDNSource (parent) {
-		var json = grunt.file.readJSON(path.join(parent, 'build/package.json'));
+		var file = path.join(parent, 'build/package.json');
+		if (!grunt.file.exists(file)) {
+			return;
+		}
+		var json = grunt.file.readJSON(file);
 		var version = json.version;
 
 		var src = path.join(parent, 'lib', '*' + '-' + version + '*');
@@ -407,10 +412,12 @@ module.exports = function (grunt) {
 
 			// If even one directory is missing, this will fail.
 			if (file == null || !grunt.file.exists(file)) {
-				console.error("Missing source directory: ", o.cwd);
-				return;
+				console.error("*** ERROR: Missing source directory: ", o.cwd);
+				console.log("    Combined BUILD will not work properly.");
+				return sourcePaths;
 			}
-			var json = grunt.file.readJSON();
+			var json = grunt.file.readJSON(file);
+
 			var sources = json[o.source];
 			sources.forEach(function (item, index, array) {
 				array[index] = path.resolve(o.cwd, item);
