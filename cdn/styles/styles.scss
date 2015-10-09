@@ -94,6 +94,48 @@ p {
 .expand.accordion {
 	background-color: $color_gray-light;
 }
+
+.icon-accordion { // Plus/minus icon
+	position: absolute;
+	top:0;
+	right:3rem;
+	width:15px;
+	height:15px;
+	margin: 11px 0;
+	&::before {
+		content:"";
+		background-color: #4c6575;
+		width: 3px;
+		height: 11px;
+		position: absolute;
+		top:2px;
+		left: 6px;
+		border-radius: 1px;
+		-webkit-border-radius: 1px;
+		-moz-border-radius: 1px;
+	}
+	&::after {
+		content:"";
+		background-color: #4c6575;
+		width: 11px;
+		height: 3px;
+		position: absolute;
+		top:6px;
+		left: 2px;
+		border-radius: 1px;
+		-webkit-border-radius: 1px;
+		-moz-border-radius: 1px;
+	}
+}
+// Change to Minus Icon when expanded
+.expand.accordion {
+	.icon-accordion {
+		&::before {
+			content: none;
+		}
+	}
+}
+
 .drawer-icon {
 	width: 1.6rem;
 	height: 1.6rem;
