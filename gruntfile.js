@@ -247,8 +247,8 @@ module.exports = function (grunt) {
 	});
 
 	// Main tasks
-	grunt.registerTask('build', 'Build every project using the latest version in each package.json.', ['start', 'hub:build', 'core', 'hub:reset', 'end']);
-	grunt.registerTask('next', 'Build every project using a NEXT version.', ['start', 'hub:next', 'core', 'hub:reset', 'end']);
+	grunt.registerTask('build', 'Build every project using the latest version in each package.json.', ['start', 'copyCommon', 'hub:build', 'core', 'hub:reset', 'end']);
+	grunt.registerTask('next', 'Build every project using a NEXT version.', ['start', 'copyCommon', 'hub:next', 'core', 'hub:reset', 'end']);
 	grunt.registerTask('core', 'Main task that only runs global tasks. (The child projects are not built)', ['js', 'multicopy:assets', 'clean:examples', 'copy']);
 	grunt.registerTask('js', 'Only minifies and combines the JavaScript files.', ['uglify', 'concat']);
 
