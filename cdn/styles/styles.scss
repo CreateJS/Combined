@@ -385,12 +385,17 @@ li {
 		padding-left: 0.9rem;
 	}
 }
-	.cf:before, .cf:after {
-		content: 	"";
-		display:	table;
-	}
-	.cf:after {
-		clear:		both;
+.cf:before, .cf:after {
+	content: 	"";
+	display:	table;
+}
+.cf:after {
+	clear:		both;
+}
+.cf p {
+	color: 	$color_gray-dark;
+	padding-left: 0.9rem;
+	font-style: italic;
 }
 
 
