@@ -19,6 +19,7 @@ module.exports = function (grunt) {
 				}
 			},
 			build: {
+			build: {
 				files: {
 					'builds/createjs-<%= grunt.template.today("yyyy.mm.dd") %>.min.js': getCombinedSource(true)
 				}
@@ -153,25 +154,25 @@ module.exports = function (grunt) {
 						expand: true,
 						cwd: getConfigValue('easel_path') + 'src/',
 						src: '**/*.js',
-						dest: getConfigValue('site_path') + '/Demos/src'
+						dest: getConfigValue('site_path') + '/demos/src'
 					},
 					{
 						expand: true,
 						cwd: getConfigValue('preload_path') + 'src/',
 						src: '**/!(easeljs)*.js',
-						dest: getConfigValue('site_path') + '/Demos/src'
+						dest: getConfigValue('site_path') + '/demos/src'
 					},
 					{
 						expand: true,
 						cwd: getConfigValue('sound_path') + 'src/',
 						src: '**/!(easeljs)*.js',
-						dest: getConfigValue('site_path') + '/Demos/src'
+						dest: getConfigValue('site_path') + '/demos/src'
 					},
 					{
 						expand: true,
 						cwd: getConfigValue('tween_path') + 'src/',
 						src: '**/!(easeljs)*.js',
-						dest: getConfigValue('site_path') + '/Demos/src'
+						dest: getConfigValue('site_path') + '/demos/src'
 					},
 
 					// Copy examples over to the site.
@@ -179,25 +180,25 @@ module.exports = function (grunt) {
 						expand: true,
 						cwd: getConfigValue('easel_path') + '/examples',
 						src: '**',
-						dest: getConfigValue('site_path') + '/Demos/EaselJS'
+						dest: getConfigValue('site_path') + '/demos/easeljs'
 					},
 					{
 						expand: true,
 						cwd: getConfigValue('preload_path') + '/examples',
 						src: '**',
-						dest: getConfigValue('site_path') + '/Demos/PreloadJS'
+						dest: getConfigValue('site_path') + '/demos/preloadjs'
 					},
 					{
 						expand: true,
 						cwd: getConfigValue('sound_path') + '/examples',
 						src: '**',
-						dest: getConfigValue('site_path') + '/Demos/SoundJS'
+						dest: getConfigValue('site_path') + '/demos/soundjs'
 					},
 					{
 						expand: true,
 						cwd: getConfigValue('tween_path') + '/examples',
 						src: '**',
-						dest: getConfigValue('site_path') + '/Demos/TweenJS'
+						dest: getConfigValue('site_path') + '/demos/tweenjs'
 					}
 				]
 			},
@@ -221,10 +222,10 @@ module.exports = function (grunt) {
 				force: true
 			},
 			examples: [
-				getConfigValue('site_path') + '/Demos/EaselJS',
-				getConfigValue('site_path') + '/Demos/PreloadJS',
-				getConfigValue('site_path') + '/Demos/SoundJS',
-				getConfigValue('site_path') + '/Demos/TweenJS'
+				getConfigValue('site_path') + '/demos/easeljs',
+				getConfigValue('site_path') + '/demos/preloadjs',
+				getConfigValue('site_path') + '/demos/soundjs',
+				getConfigValue('site_path') + '/demos/tweenjs'
 			]
 		}
 	});
