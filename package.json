@@ -15,7 +15,7 @@
     "grunt-contrib-yuidoc": "~0.5.2",
     "grunt-hub": "~0.7.0",
     "html-minifier": "^0.7.2",
-    "inline-source": "^4.0.0",
+    "inline-source": "4.2.0",
     "lodash": "~2.4.1"
   },
   "engine": "node >= 0.10.22"

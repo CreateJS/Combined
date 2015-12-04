@@ -19,6 +19,7 @@ module.exports = function (grunt) {
 				}
 			},
 			build: {
+			build: {
 				files: {
 					'builds/createjs-<%= grunt.template.today("yyyy.mm.dd") %>.min.js': getCombinedSource(true)
 				}
@@ -153,25 +154,25 @@ module.exports = function (grunt) {
 						expand: true,
 						cwd: getConfigValue('easel_path') + 'src/',
 						src: '**/*.js',
-						dest: getConfigValue('site_path') + '/Demos/src'
+						dest: getConfigValue('site_path') + '/demos/src'
 					},
 					{
 						expand: true,
 						cwd: getConfigValue('preload_path') + 'src/',
 						src: '**/!(easeljs)*.js',
-						dest: getConfigValue('site_path') + '/Demos/src'
+						dest: getConfigValue('site_path') + '/demos/src'
 					},
 					{
 						expand: true,
 						cwd: getConfigValue('sound_path') + 'src/',
 						src: '**/!(easeljs)*.js',
-						dest: getConfigValue('site_path') + '/Demos/src'
+						dest: getConfigValue('site_path') + '/demos/src'
 					},
 					{
 						expand: true,
 						cwd: getConfigValue('tween_path') + 'src/',
 						src: '**/!(easeljs)*.js',
-						dest: getConfigValue('site_path') + '/Demos/src'
+						dest: getConfigValue('site_path') + '/demos/src'
 					},
 
 					// Copy examples over to the site.
@@ -179,25 +180,25 @@ module.exports = function (grunt) {
 						expand: true,
 						cwd: getConfigValue('easel_path') + '/examples',
 						src: '**',
-						dest: getConfigValue('site_path') + '/Demos/EaselJS'
+						dest: getConfigValue('site_path') + '/demos/easeljs'
 					},
 					{
 						expand: true,
 						cwd: getConfigValue('preload_path') + '/examples',
 						src: '**',
-						dest: getConfigValue('site_path') + '/Demos/PreloadJS'
+						dest: getConfigValue('site_path') + '/demos/preloadjs'
 					},
 					{
 						expand: true,
 						cwd: getConfigValue('sound_path') + '/examples',
 						src: '**',
-						dest: getConfigValue('site_path') + '/Demos/SoundJS'
+						dest: getConfigValue('site_path') + '/demos/soundjs'
 					},
 					{
 						expand: true,
 						cwd: getConfigValue('tween_path') + '/examples',
 						src: '**',
-						dest: getConfigValue('site_path') + '/Demos/TweenJS'
+						dest: getConfigValue('site_path') + '/demos/tweenjs'
 					}
 				]
 			},
@@ -221,10 +222,10 @@ module.exports = function (grunt) {
 				force: true
 			},
 			examples: [
-				getConfigValue('site_path') + '/Demos/EaselJS',
-				getConfigValue('site_path') + '/Demos/PreloadJS',
-				getConfigValue('site_path') + '/Demos/SoundJS',
-				getConfigValue('site_path') + '/Demos/TweenJS'
+				getConfigValue('site_path') + '/demos/easeljs',
+				getConfigValue('site_path') + '/demos/preloadjs',
+				getConfigValue('site_path') + '/demos/soundjs',
+				getConfigValue('site_path') + '/demos/tweenjs'
 			]
 		}
 	});
@@ -253,6 +254,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('js', 'Only minifies and combines the JavaScript files.', ['uglify', 'concat']);
 
 	grunt.registerTask('cdn', 'Build a new CDN index page and copy all required files to the cdn/build/ folder.', ['sass:cdn', 'inline:cdn', 'copyCDNSource', 'copy:cdn']);
+	grunt.registerTask('design', 'Build a new CDN index page.', ['sass:cdn', 'inline:cdn', 'copy:cdn']);
 	grunt.registerTask('cdn:build', 'Alias for ```grunt build cdn```', ['build', 'cdn']);
 
 	grunt.registerTask('copyCDNSource', 'Copy all the required sources from each library (and combined files) into cdn/build/', function () {
@@ -277,8 +279,9 @@ module.exports = function (grunt) {
 
 		var grouped = grunt.file.expand('builds/*' + newsetTimestamp + '*');
 
-		var all = easel.concat(tween, sound, preload, grouped);
+		var all = [].concat(easel,tween, sound, preload, grouped);
 		all.forEach(function (src) {
+			if (src == undefined) { return; }
 			var dest = path.basename(src);
 			grunt.file.copy(src, path.join('cdn/build', dest));
 		});
@@ -287,7 +290,11 @@ module.exports = function (grunt) {
 	});
 
 	function getCDNSource (parent) {
-		var json = grunt.file.readJSON(path.join(parent, 'build/package.json'));
+		var file = path.join(parent, 'build/package.json');
+		if (!grunt.file.exists(file)) {
+			return;
+		}
+		var json = grunt.file.readJSON(file);
 		var version = json.version;
 
 		var src = path.join(parent, 'lib', '*' + '-' + version + '*');
@@ -396,13 +403,22 @@ module.exports = function (grunt) {
 				config: 'config.json',
 				source: 'source'
 			}
-		]
+		];
 
 		// Pull out all the source paths.
 		var sourcePaths = [];
 		for (var i = 0; i < configs.length; i++) {
 			var o = configs[i];
-			var json = grunt.file.readJSON(path.resolve(o.cwd, o.config));
+			var file = path.resolve(o.cwd, o.config);
+
+			// If even one directory is missing, this will fail.
+			if (file == null || !grunt.file.exists(file)) {
+				console.error("*** ERROR: Missing source directory: ", o.cwd);
+				console.log("    Combined BUILD will not work properly.");
+				return sourcePaths;
+			}
+			var json = grunt.file.readJSON(file);
+
 			var sources = json[o.source];
 			sources.forEach(function (item, index, array) {
 				array[index] = path.resolve(o.cwd, item);

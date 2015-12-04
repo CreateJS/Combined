@@ -171,11 +171,11 @@ h1 {
 		// Static
 		// Dynamic
 	//	BREAKPOINTS
-	@include bp($bp_width-600, max-) {
+	@include bp($w: 0 $bp_width-600) {
 		font-size: $fontSize-larger;
 		line-height: $gridUnit-large;
   	}
-  	@include bp($bp_width-600, min-) {
+  	@include bp($w: $bp_width-600) {
 		font-size: $fontSize-largest;
 		line-height: $gridUnit-larger;
   	}
@@ -183,11 +183,11 @@ h1 {
 
 h2 {
 	@extend h1;
-	@include bp($bp_width-600, max-) {
+	@include bp($w: 0 $bp_width-600) {
 		font-size: $fontSize-default;
 		line-height: $gridUnit-default;
   	}
-  	@include bp($bp_width-600, min-) {
+  	@include bp($w: $bp_width-600) {
 		font-size: $fontSize-large;
   		line-height: $gridUnit-large;
   	}
@@ -196,10 +196,10 @@ h2 {
 h3 {
 	@extend h1;
 	font-weight: 400;
-	@include bp($bp_width-600, max-) {
+	@include bp($w: 0 $bp_width-600) {
 		font-size: $fontSize-small;
   	}
-  	@include bp($bp_width-600, min-) {
+  	@include bp($w: $bp_width-600) {
 		font-size: $fontSize-default;
   	}
 }
@@ -251,7 +251,7 @@ p {
 		// Static
 		// Dynamic
 	//	BREAKPOINTS
-	@include bp($bp_width-600) {
+	@include bp($w: $bp_width-600) {
 		font-size: $fontSize-smaller;
 		line-height: 2.2rem;
 	}

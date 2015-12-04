@@ -32,11 +32,11 @@ module.exports = function (grunt) {
 
 	grunt.registerMultiTask('inline', function () {
 		var done = this.async();
-
+        
 		this.files.forEach(function (file) {
 			file.src.filter(function (src) {
 				inline(path.join(file.cwd, src), {
-					rootpath: file.cwd,
+					rootpath: file.cwd, compress: false
 				}, function (err, html) {
 					if (err) {
 						grunt.fail.fatal(err);
