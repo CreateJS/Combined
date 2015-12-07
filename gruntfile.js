@@ -19,7 +19,6 @@ module.exports = function (grunt) {
 				}
 			},
 			build: {
-			build: {
 				files: {
 					'builds/createjs-<%= grunt.template.today("yyyy.mm.dd") %>.min.js': getCombinedSource(true)
 				}
