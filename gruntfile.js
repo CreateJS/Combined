@@ -335,7 +335,7 @@ module.exports = function (grunt) {
 				clean.push(src);
 				dups[cleanSrc] = src;
 			} else {
-				if (grunt.file.read(dups[cleanSrc]) != grunt.file.read(src)) {
+				if (!grunt.file.exists(src) || grunt.file.read(dups[cleanSrc]) != grunt.file.read(src)) {
 					grunt.log.ok("Copied: " + cleanSrc, "to", src);
 					grunt.file.copy(dups[cleanSrc], src);
 					copyCount++;
