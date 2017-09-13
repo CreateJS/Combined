@@ -103,6 +103,8 @@ p {
 	width:15px;
 	height:15px;
 	margin: 11px 0;
+	user-selection: none;
+	pointer-events: none;
 	&::before {
 		content:"";
 		background-color: #4c6575;
