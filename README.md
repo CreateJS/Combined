@@ -2,7 +2,7 @@
 
 CreateJS combined builds are a combined and minified version of 
 * [EaselJS](http://createjs.com/easeljs)
-* [TweenJSEaselTweenJSJS](http://createjs.com/tweenjs)
+* [TweenJS](http://createjs.com/tweenjs)
 * [PreloadJS](http://createjs.com/preloadjs)
 * [SoundJS](http://createjs.com/soundjs)
 
