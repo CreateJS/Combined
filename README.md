@@ -17,10 +17,7 @@ and can be installed via [NPM](https://www.npmjs.com/package/createjs).
 npm install createjs --save
 ```
 
-Import createjs into your project, and use as normal
-```
-import createjs from 'createjs';
-``` 
+For the time being, only ES5 versions of CreateJS are available, which can not yet be used with RequireJS, CommonJS, etc.
 
 # Building CreateJS combined builds
 If you have special requirements, specifically combining your own version of the combined library with specific, custom,
