@@ -10,7 +10,17 @@ Note that shared classes are only included once, so these builds are not just co
 libraries.
 
 Individual and combined builds in this repository are also available on the [CreateJS CDN](https://code.createjs.com), 
-and can be installed via [NPM](https://www.npmjs.com/package/createjs). 
+and can be installed via [NPM](https://www.npmjs.com/package/createjs).
+
+### NPM Usage
+```
+npm install createjs --save
+```
+
+Import createjs into your project, and use as normal
+```
+import createjs from 'createjs';
+``` 
 
 # Building CreateJS combined builds
 If you have special requirements, specifically combining your own version of the combined library with specific, custom,
@@ -80,9 +90,9 @@ grunt next
 Does the exact same process as above but uses NEXT as the version.
 
 ### Main commands
-* grunt build - Builds all the projects and creates combined / minified files
-* grunt next - Same as build, but uses the NEXT version.
-* grunt core - Only run the global tasks (only, concat and minify js files, copy the examples and source to other folders.
-* grunt js - Only uglify and concat the javascript.
-* grunt cdn - Builds a new CDN index page and copies all required script files to build. (To build all libs and the cdn run grunt cdn:build or grunt build cdn)
-* grunt design - Build the CDN/ folder, which is deployed at https://code.createjs.com
+* `grunt build` - Builds all the projects and creates combined / minified files
+* `grunt next` - Same as build, but uses the NEXT version.
+* `grunt core` - Only run the global tasks (only, concat and minify js files, copy the examples and source to other folders.
+* `grunt js` - Only uglify and concat the javascript.
+* `grunt cdn` - Builds a new CDN index page and copies all required script files to build. (To build all libs and the cdn run grunt cdn:build or grunt build cdn)
+* `grunt design` - Build the CDN/ folder, which is deployed at https://code.createjs.com
