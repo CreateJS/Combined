@@ -6,7 +6,7 @@
   "url": "http://www.createjs.com",
   "repository": {
     "type": "git",
-    "url": "git+https://lannymcnie@github.com/CreateJS/Combined.git"
+    "url": "https://github.com/CreateJS/Combined.git"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
