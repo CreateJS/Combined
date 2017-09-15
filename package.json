@@ -1,9 +1,13 @@
 {
-  "name": "CreateJS",
+  "name": "createjs",
+  "npmName": "createjs",
   "version": "1.0.0",
-  "description": "CreateJS",
+  "description": "A suite of modular libraries and tools which work together or independently to enable rich interactive content on open web technologies via HTML5.",
   "url": "http://www.createjs.com",
-  "repository": "git@git.gskinner.com:createjs_buildall.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://lannymcnie@github.com/CreateJS/Combined.git"
+  },
   "devDependencies": {
     "grunt": "~0.4.5",
     "grunt-contrib-clean": "~0.6.0",
@@ -18,5 +22,22 @@
     "inline-source": "4.2.0",
     "lodash": "~2.4.1"
   },
-  "engine": "node >= 0.10.22"
+  "engine": "node >= 0.10.22",
+  "main": "createjs.js",
+  "keywords": [
+    "createjs",
+    "easeljs",
+    "tweenjs",
+    "soundjs",
+    "preloadjs",
+    "zoe",
+    "gskinner",
+    "flash",
+    "javascript",
+    "canvas",
+    "html5",
+    "animate"
+  ],
+  "author": "gskinner.com, inc.",
+  "license": "MIT"
 }
