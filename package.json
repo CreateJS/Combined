@@ -24,6 +24,7 @@
   },
   "engine": "node >= 0.10.22",
   "main": "createjs.js",
+  "jsdelivr": "builds/1.0.0/createjs.min.js",
   "keywords": [
     "createjs",
     "easeljs",
