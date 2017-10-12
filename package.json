@@ -1,7 +1,7 @@
 {
   "name": "createjs",
   "npmName": "createjs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A suite of modular libraries and tools which work together or independently to enable rich interactive content on open web technologies via HTML5.",
   "url": "http://www.createjs.com",
   "repository": {
